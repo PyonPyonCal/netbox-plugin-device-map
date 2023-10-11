@@ -12,12 +12,18 @@ LOCATION_CF_NAME = plugin_settings['device_geolocation_cf']
 NETBOX_VERSION = version.parse(VERSION)
 LatLon = tuple[float, float]
 
-
+""" Old Code
 def get_device_location(device: Device) -> LatLon | None:
-    """Extract device geolocation from special custom field"""
+    Extract device geolocation from special custom field
     if location_cf := device.custom_field_data.get(LOCATION_CF_NAME):
         return tuple(map(float, location_cf.replace(' ', '').split(',', maxsplit=1)))
+"""
 
+"""Modified Code"""
+def get_device_location(device: Device) -> LatLon | None:
+    """Extract device geolocation from lat and lon fields"""
+    if location_cf := (device.latitude, device.longitude):
+        return tuple(map(float, location_cf))
 
 def get_connected_devices(device: Device, vlan: VLAN = None) -> QuerySet[Device]:
     """Get list of connected devices to the specified device.
