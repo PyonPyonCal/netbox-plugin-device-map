@@ -67,7 +67,7 @@ for (let key in markers) {
         sidebar.displayed_device = device.id
         document.querySelector('.sidebar-device-name').innerHTML = `<a href="${device.url}" target="_blank">${device.name}</a>`
         document.querySelector('.sidebar-device-role').innerHTML = device.role
-        document.querySelector('.sidebar-device-ip').innerHTML = device.primary_ip()
+        document.querySelector('.sidebar-device-ip').innerHTML = device.ip
         sidebar.show()
         fetch(`connected-cpe/${device.id}?vlan=${map_data.vlan}`)
           .then(response => response.json()).then(
