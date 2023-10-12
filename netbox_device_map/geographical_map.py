@@ -26,7 +26,8 @@ def configure_leaflet_map(map_id: str, devices: dict[Device, LatLon], calculate_
                 id=device.id,
                 name=device.name,
                 url=device.get_absolute_url(),
-                role=device.device_role.name
+                role=device.device_role.name,
+                ip=device.ipam.IPAddress
             )
         ))
         if calculate_connections:
