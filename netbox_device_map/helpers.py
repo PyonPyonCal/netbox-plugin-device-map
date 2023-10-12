@@ -22,8 +22,8 @@ def get_device_location(device: Device) -> LatLon | None:
 """Modified Code"""
 def get_device_location(device: Device) -> LatLon | None:
     """Extract device geolocation from lat and lon fields"""
-    if location_cf := (device.latitude, device.longitude):
-        return tuple(map(float, location_cf))
+    if device.latitude is not None and device.longitude is not None:
+        return tuple(map(float, (device.latitude, device.longitutde)))
 
 def get_connected_devices(device: Device, vlan: VLAN = None) -> QuerySet[Device]:
     """Get list of connected devices to the specified device.
