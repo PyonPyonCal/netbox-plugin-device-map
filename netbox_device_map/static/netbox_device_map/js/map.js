@@ -22,7 +22,8 @@ let geomap = L.map(map_data.map_id,
     crs: L.CRS[map_data.crs],
     layers: [L.tileLayer(map_data.tiles.url_template, map_data.tiles.options)],
     fullscreenControl: true,
-    fullscreenControlOptions: {position: 'topright'}
+    fullscreenControlOptions: {position: 'topright'},
+    minZoom: 11;
   }
 )
 geomap.attributionControl.setPrefix(`<a href="https://leafletjs.com" title="A JavaScript library for interactive maps">Leaflet</a>`)
@@ -47,8 +48,9 @@ map_data.markers.forEach(function(entry) {
   }
 })
 
+const marker_parent_layer = L.markerClusterGroup({ disableClusteringAtZoom: 18 });
+
 for (let key in markers) {
-  const marker_parent_layer = markers[key].length > 1 ? L.markerClusterGroup() : geomap;
   for (let marker_data of markers[key]) {
     let iconOptions = {}
     if (marker_data.icon && marker_data.icon in marker_icon_configs) {
@@ -99,10 +101,8 @@ for (let key in markers) {
     bounds.extend(marker_data.position)
     marker_parent_layer.addLayer(markerObj)
   }
-  if (markers[key].length > 1) {
-    geomap.addLayer(marker_parent_layer)
-  }
 }
+geomap.addLayer(marker_parent_layer)
 
 const normalLineStyle = {weight: 3, color: '#3388ff'}
 const boldLineStyle ={weight: 5, color:'#0c10ff'};
