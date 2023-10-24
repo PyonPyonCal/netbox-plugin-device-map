@@ -48,7 +48,7 @@ map_data.markers.forEach(function(entry) {
   }
 })
 
-const marker_parent_layer = L.markerClusterGroup({ disableClusteringAtZoom: 18 });
+const marker_parent_layer = L.markerClusterGroup({ disableClusteringAtZoom: 18 }); // create cluster layer
 
 for (let key in markers) {
   for (let marker_data of markers[key]) {
@@ -102,7 +102,12 @@ for (let key in markers) {
     marker_parent_layer.addLayer(markerObj)
   }
 }
-geomap.addLayer(marker_parent_layer)
+geomap.addLayer(marker_parent_layer) //add all points to cluster layer
+
+try {  //import geomap layer from js formatted geoJSON with variable "geoFile"
+  let a = new L.GeoJSON(geoFile); 
+  a.addTo(geomap);
+} catch(error) { console.error(error); }
 
 const normalLineStyle = {weight: 3, color: '#3388ff'}
 const boldLineStyle ={weight: 5, color:'#0c10ff'};
