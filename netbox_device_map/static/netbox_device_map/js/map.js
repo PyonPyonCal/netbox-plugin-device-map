@@ -102,17 +102,9 @@ for (let key in markers) {
     marker_parent_layer.addLayer(markerObj)
   }
 }
-//geomap.addLayer(marker_parent_layer) //add all points to cluster layer
-const marker_imported_layer = new L.markerClusterGroup({ disableClusteringAtZoom: 18 });
 
-try {  //import geomap layer from js formatted geoJSON with variable "geoFile"
-  let a = new L.GeoJSON(geoFile); 
-  marker_imported_layer.addLayer(a);
-} catch(error) { console.error(error); }
-
-var baseMaps = {
+var baseMaps = {  //add main overlay layer
   "Netbox": marker_parent_layer,
-  "Imported": marker_imported_layer
 };
 
 var layerControl = L.control.layers(baseMaps).addTo(geomap);
