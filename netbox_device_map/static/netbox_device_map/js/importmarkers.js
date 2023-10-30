@@ -1,37 +1,9 @@
-const form = document.querySelector('form');
-form.addEventListener('submit', handleSubmit);
-
-function handleSubmit(event) {
-    const form = event.currentTarget;
-    const url = net URL(form.action);
-    const formData = new FormData(form);
-    const searchParams = new URLSearchParams(formData);
-
-    const fetchOptions = {
-      method: form.method,
-    };
-
-  if (form.method.toLowerCase() === 'post') {
-    if (form.enctype === 'multipart/form-data') {
-      fetchOptions.body = formData;
-    } else {
-      fetchOptions.body = searchParams;
-    }
-  } else {
-    url.search = searchParams;
-  }
-  
-    fetch(url, fetchOptions);
-
-    // geoFile = toGeoJSON(document.getElementByID("uploadFile").value);
-    // importGeoMarkers(geoFile);
-  
-    event.preventDefault();
-}
-
-function importGeoMarkers(JSON geoFile) {
+function importGeoMarkers(kmlFile) {
+  const geoFile = toGeoJSON.kml(new DomParser().parseFromString(kmlFile, 'application/xml')); //convert kml file to geoJson with togeojson
   const marker_imported_layer = new L.markerClusterGroup({ disableClusteringAtZoom: 18 });
+  marker_imported_layer.id = "importedLayer";
   const cable_layer = new L.layerGroup();
+  cable_layer.id = "cableLayer";
     try {
       for(let i=0; i<geoFile["features"].length; i++){
         if(geoFile["features"][i]["geometry"]["type"] == "Point"){
@@ -45,8 +17,8 @@ function importGeoMarkers(JSON geoFile) {
           marker_imported_layer.addLayer(markerObj);
         } else {
           const lineCoords = [];
-          for(let j=0; j<geoFile["features"][i]["geometry"]["coordinates"].length; i++){
-            let coords = [geoFile["features"][i]["geometry"]["coordinates"][j][1], geoFiles["features"][i]["geometry"]["coordinates"][j]];
+          for(let j=0; j<geoFile["features"][i]["geometry"]["coordinates"].length; j++){
+            let coords = [geoFile["features"][i]["geometry"]["coordinates"][j][1], geoFile["features"][i]["geometry"]["coordinates"][j]];
             lineCoords .push(coords);
           }
           let linePoly = L.polyline(lineCoords, {color: 'black'});
