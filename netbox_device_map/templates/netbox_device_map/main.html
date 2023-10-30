@@ -16,7 +16,9 @@
     <link rel="stylesheet" href="{% static 'netbox_device_map/leaflet.markercluster/MarkerCluster.css' %}">
     <link rel="stylesheet" href="{% static 'netbox_device_map/leaflet.markercluster/MarkerCluster.Default.css' %}">
     <script src="{% static 'netbox_device_map/leaflet.markercluster/leaflet.markercluster.js' %}"></script>
-
+    <script src="{% static 'netbox_device_map/leaflet.ajax.min.js' %}"></script>
+    <script src="{% static 'netbox_device_map/js/importmarkers.js' %}"></script>
+    <script src="{% static 'netbox_device_map/js/togeojson.js' %}"></script>
     <link rel="stylesheet" href="{% static 'netbox_device_map/style.css' %}">
 {% endblock %}
 
@@ -80,8 +82,31 @@
                 Please specify filtering criteria for displaying the map
             {% endif %}
         </div>
-        <div class="tab-pane" id="filters-form" role="tabpanel" aria-labelledby="filters-form-tab">
-            {% include 'inc/filter_list.html' %}
+        <div class="tab-pane" id="import-kml" role="tabpanel" aria-labelledby="import-kml-tab">
+            <body onload="init()">
+                <input id="geofile" name="file" type="file" accept="*.kml" />
+                <p id="status">No File Loaded.</p>
+                <script>
+                    {
+                        function init(){
+                            document.getElementById('geofile').addEventListener('change', handleFile, false)
+                        }
+
+                        function handFile(event){
+                            const reader = new FileReader()
+                            reader.onload = handleFileLoad;
+                            reader.readAsText(event.target.files[0])
+                        }
+
+                        function handleFileLoad(event){
+                            console.log("loaded file");
+                            document.getElementById('status').textContent = "File Loaded.";
+                            let result = event.target.result;
+                            importGeoMarkers(result);
+                        }
+                    }
+                </script>
+            </body>
         </div>
     </div>
 {% endblock %}
