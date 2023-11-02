@@ -17,15 +17,30 @@ let marker_icon_configs = {
 
 const map_data = JSON.parse(document.getElementById('map-data').textContent)
 
+var esriSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y]/{x}',{
+  maxZoom:20,
+  attribution: 'Esri',
+});
+
+var mapTile = L.tileLayer(map_data.tiles.url_template, { maxZoom: 20, MaxNativeZoom: 18 });
+
+var baseMap = {
+  "Satellite": esriSat,
+};
+
 let geomap = L.map(map_data.map_id,
   {
     crs: L.CRS[map_data.crs],
-    layers: [L.tileLayer(map_data.tiles.url_template, map_data.tiles.options)],
+    layers: [mapTile],
     fullscreenControl: true,
     fullscreenControlOptions: {position: 'topright'},
     minZoom: 11;
   }
 )
+
+var layerControl = L.control.layers(baseMap).addTo(geomap);
+geomap.eachLayer(function(layer){ layerControl.addBaseLayer(layer, "Base") });
+
 geomap.attributionControl.setPrefix(`<a href="https://leafletjs.com" title="A JavaScript library for interactive maps">Leaflet</a>`)
 geomap.attributionControl.addAttribution(map_data.attribution)
 
