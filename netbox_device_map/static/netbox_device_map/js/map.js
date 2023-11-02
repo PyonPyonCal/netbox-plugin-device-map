@@ -63,7 +63,7 @@ map_data.markers.forEach(function(entry) {
   }
 })
 
-const marker_parent_layer = L.markerClusterGroup({ disableClusteringAtZoom: 18 }); // create cluster layer
+const marker_parent_layer = L.markerClusterGroup({ maxClusterRadius: 100, animateAddingMarkers: true }); // create cluster layer
 
 for (let key in markers) {
   for (let marker_data of markers[key]) {
@@ -118,11 +118,7 @@ for (let key in markers) {
   }
 }
 
-var baseMaps = {  //add main overlay layer
-  "Netbox": marker_parent_layer,
-};
-
-var layerControl = L.control.layers(baseMaps).addTo(geomap);
+var layerControl.addOverlay(marker_parent_layer, "Netbox");
 
 const normalLineStyle = {weight: 3, color: '#3388ff'}
 const boldLineStyle ={weight: 5, color:'#0c10ff'};
