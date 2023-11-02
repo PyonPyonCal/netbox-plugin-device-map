@@ -6,9 +6,23 @@ function importGeoMarkers(kmlFile) {
   cable_layer.id = "cableLayer";
     try {
       for(let i=0; i<geoFile["features"].length; i++){
+        let name = geoFile["features"][i]["properties"]["name"];
         if(geoFile["features"][i]["geometry"]["type"] == "Point"){
+          var IUrl = '/static/netbox_device_map/js/icons/cube-outline.svg';
+          if(/^\d+.*$/.test(name)){
+            iUrl = '/static/netbox_device_map/js/icons/camera-iris.svg';
+          }
+          var icon = L.icon{
+            iconUrl: iUrl,
+            iconSize: [38,95],
+            iconAnchor: [20,48],
+            popupAnchor: [-3,-76],
+            shadowUrl: '/static/netbox_device_map/js/icons/circleBg.png',
+            shadowSize: [38,38],
+            shadowAnchor: [20,20],
+          });
           let markerOpts = {
-            "title": geoFile["features"][i]["properties"]["name"],
+            "title": name,
             "clickable": true,
             "icon": L.divIcon.svgIcon(default_marker_icon),
           }
