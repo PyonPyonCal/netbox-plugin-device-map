@@ -24,20 +24,36 @@ function importGeoMarkers(kmlFile) {
           let markerOpts = {
             "title": name,
             "clickable": true,
-            "icon": L.divIcon.svgIcon(default_marker_icon),
+            "icon": icon,
           }
           let markerObj = L.marker([geoFile["features"][i]["geometry"]["coordinates"][1], geoFile["features"][i]["geometry"]["coordinates"][0]],markerOpts);
-          const popupContent = '<h2>' + geoFile["features"][i]["properties"]["name"]).openPopup();
+          const popupContent = '<h6>' + name;
+          markerObj.bindPopup(popupContent).openPopup();
           marker_imported_layer.addLayer(markerObj);
         } else {
           const lineCoords = [];
           for(let j=0; j<geoFile["features"][i]["geometry"]["coordinates"].length; j++){
-            let coords = [geoFile["features"][i]["geometry"]["coordinates"][j][1], geoFile["features"][i]["geometry"]["coordinates"][j]];
-            lineCoords .push(coords);
+            let coords = [geoFile["features"][i]["geometry"]["coordinates"][j][1], geoFile["features"][i]["geometry"]["coordinates"][j][0]];
+            lineCoords.push(coords);
           }
-          let linePoly = L.polyline(lineCoords, {color: 'black'});
+          let colour = 'black';
+          let dash = '0,0';
+          if(name == "MM"){
+            colour = 'orange';
+          }else if(name == "PSM" || name == "SM"){
+            colour = 'yellow';
+          }else if(/^.*coax.*$/.test(name)){
+            colour = 'white';
+          }else if(/^.*\-.*$/.test(name)){
+            colour = 'aqua';
+            dash = '10,10'
+          }else{
+            colour = 'blue';
+          }
+          let linePoly = L.polyline(lineCoords, {color: colour, dashArray: dash}).bindPopup(name);
           cable_layer.addLayer(linePoly);
         }
+      } catch(error) { console.error(error) }
   layerControl.addBaseLayer(marker_imported_layer, "Imported");
   layerControl.addOverlay(cable_layer, "Cables");
 }
