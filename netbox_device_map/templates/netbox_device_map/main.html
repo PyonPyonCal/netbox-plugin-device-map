@@ -84,6 +84,17 @@
                 </div>
                 {{ map_data|json_script:"map-data" }}
                 <script src="{% static 'netbox_device_map/js/map.js' %}"></script>
+                <script>
+                    {
+                        const params = new URLSearchParams(location.search);
+                        var p = params.get('q');
+                        p = p.split(',');
+                        console.log(p);
+                        if(!(p == null)){
+                            geomap.panTo(new L.LatLng(p[0],p[1]));
+                        }
+                    }
+                </script>
             {% else %}
                 Please specify filtering criteria for displaying the map
             {% endif %}
